@@ -17,7 +17,7 @@ def gui_propmt2():
     layout_menu = [ [gui.Text("!!Welcome To Mavika store!!", size = (20, 1), font = ("Cooper Black", 20), expand_x = True, justification = "centre")],
                     [gui.Image(filename = "cat.png", size = (150, 220),  expand_x = True, expand_y = True)],
                     [gui.Button("Get Information"), gui.Button("List all Items"), gui.Button("Make BILL"), gui.Button("Admin Login"), gui.Button("Exit")]
-        ]
+    ]
 
 
     #GET INFORMATION 
@@ -27,7 +27,7 @@ def gui_propmt2():
                        [gui.Button("Search")],
                        [gui.Table(values =  data, headings = head, key = "infotable", justification = "centre")],
                        [gui.Button("Back", key = "back_getinfo")]
-        ]
+    ]
 
    
     #ADMIN LOGIN
@@ -35,17 +35,28 @@ def gui_propmt2():
                           [gui.Text("Enter Name", size = (12,1)), gui.Input(key = "NAME", do_not_clear = False)],
                           [gui.Text("Enter Password", size = (12,1)), gui.Input(key = "PASSWORD", do_not_clear = False)],
                           [gui.Button("Enter"), gui.Button("Back", key = "back_login")]
-        ]
+    ]
 
    
     #UNDER ADMIN LOGIN - "STOCK UPDATION"
-    layout_stockupd = [ [gui.Text("Welcome to Stock Updation", expand_x = "True", justification = "centre")],
-                        [gui.Text("Select your Choice")],[gui.Listbox(values = ['Add', 'Update', 'Delete'], key = "stockupdation", select_mode = "single"],
-                        [gui.Button("Back", key = "back_stock")]
-        ]
+    layout_stock = [ [gui.Text("Welcome to Stock Updation", expand_x = "True", justification = "centre")],
+                     [gui.Text("Select your Choice")],[gui.Listbox(values = ['Add', 'Update', 'Delete'], key = "stockupdation", select_mode = "single"],
+                     [gui.Button("Back", key = "back_stock")]
+   ]
 
 
     #UNDER STOCK UPDATION - "ADD" "UPDATE" "DELETE" separate
+    layout_stockadd = [
+        
+    ]
+
+    layout_stockupd = [
+        
+    ]
+
+    layout_stockdel = [
+        
+    ]
 
   
     #MAKE BILL
@@ -68,7 +79,10 @@ def gui_propmt2():
     layout = [ [gui.Column(layout_menu, key = "l0"),
                 gui.Column(layout_getinfo, key = "l1", visible = False),
                 gui.Column(layout_adminlogin, key = "l2", visible = False),
-                gui.Column(layout_stockupd, key = "l21", visible = False),
+                gui.Column(layout_stock, key = "l21", visible = False),
+                gui.Column(layout_stockadd, key = "l211", visible = False),
+                gui.Column(layout_stockupd, key = "l212", visible = False),
+                gui.Column(layout_stockdel, key = "l213", visible = False),
                 gui.Column(layout_bill, key = "l3", visible = False),
                 gui.Column(layout_listitems, key = "l4", visible = False)]
         ]
@@ -127,12 +141,18 @@ def gui_propmt2():
                 gui.Popup("YOU'RE NOT AUTHORISED PERSONNEl!!!")
         
         if values["stockupdation"] == "Add":
+            window["l211"].update(visible = True)
+            window["l21"].update(visible = False)
             pass
 
         if values["stockupdation"] == "Update":
+            window["l212"].update(visible = True)
+            window["l21"].update(visible = False)
             pass
 
         if values["stockupdation"] == "Delete":
+            window["l213"].update(visible = True)
+            window["l21"].update(visible = False)
             pass
 
 
@@ -159,7 +179,7 @@ def gui_propmt2():
 
         if event == "Add" and values["ID"] != '' and values["QTY"] != '':
 
-            
+            #**** mathews code from school make bill**** change the below
             data = [['banana',20,5],['bottles',200,4],['blah',10000,6]]
                 
             price1 = int(float(values["QTY"]))*int(float(data[int(values["ID"])][2]))
