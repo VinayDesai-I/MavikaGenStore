@@ -1,18 +1,18 @@
 import PySimpleGUI as gui
 import mysql.connector as c
-
 cnc = c.connect(user= "root", host="localhost", password="password", database="project")
 if cnc.is_connected():
     print("Connected to DB")
 cur = cnc.cursor()
 
-def gui_prompt2():
+
+def gui_propmt2():
 
     #MAIN THINGS
     #from PIL import Image
     # data = [['banana',20,5],['bottles',200,4],['blah',10000,6]]
     cur.execute("SELECT * FROM ITEMTEST ORDER BY ID;")
-    data = cur.fetchall()
+    data = cur.fetchall()   
     #supdation = ['Add', 'Update', 'Delete']
     price2 = []
     infotable = []
@@ -50,7 +50,7 @@ def gui_prompt2():
    
     #UNDER ADMIN LOGIN - "STOCK UPDATION"
     layout_stock = [ [gui.Text("Welcome to Stock Updation", expand_x = "True", justification = "centre")],
-                     [gui.Text("Select your Choice")],[gui.Listbox(values = ['Add', 'Update', 'Delete'], key = "stockupdation", select_mode = "single")],
+                     [gui.Text("Select your Choice")],[gui.Listbox(values = ['Add', 'Update', 'Delete'], key = "stockupdation", select_mode = "single"],
                      [gui.Button("Back", key = "back_stock")]
    ]
 
@@ -81,20 +81,20 @@ def gui_prompt2():
 
     #LIST ALL ITEMS 
     layout_listitems = [ [gui.Text("Welcome to All Items", expand_x = "True", justification = "centre")],
-                         [gui.Table(values =  data, headings = head, key = "listbill", justification = "centre")],
+                         [gui.Table(values =  data, headings = head, key = "tableitems", justification = "centre")],
                          [gui.Button("Back", key = "back_allitems")]
         ]
 
     #MAIN LAYOUT
-    layout = [ [gui.Column(layout_menu, key = "l0"),
-                gui.Column(layout_getinfo, key = "l1", visible = False),
-                gui.Column(layout_adminlogin, key = "l2", visible = False),
-                gui.Column(layout_stock, key = "l21", visible = False),
-                gui.Column(layout_stockadd, key = "l211", visible = False),
-                gui.Column(layout_stockupd, key = "l212", visible = False),
-                gui.Column(layout_stockdel, key = "l213", visible = False),
-                gui.Column(layout_bill, key = "l3", visible = False),
-                gui.Column(layout_listitems, key = "l4", visible = False)]
+    layout = [ [gui.Column(layout_menu, key = "l_menu"),
+                gui.Column(layout_getinfo, key = "l_getinfo", visible = False),
+                gui.Column(layout_adminlogin, key = "l_adminlogin", visible = False),
+                gui.Column(layout_stock, key = "l_stock", visible = False),
+                gui.Column(layout_stockadd, key = "l_stockadd", visible = False),
+                gui.Column(layout_stockupd, key = "l_stockupd", visible = False),
+                gui.Column(layout_stockdel, key = "l_stockdel", visible = False),
+                gui.Column(layout_bill, key = "l_bill", visible = False),
+                gui.Column(layout_listitems, key = "l_listitems", visible = False)]
         ]
 
     # WINDOW
@@ -108,10 +108,10 @@ def gui_prompt2():
         if event in (gui.WIN_CLOSED, "Exit"):
             break
        
-        #*Get Info* starts
+        #Get Info starts
         if event == "Get Information":
-            window["l1"].update(visible = True)
-            window["l0"].update(visible = False)
+            window["l_getinfo"].update(visible = True)
+            window["l_menu"].update(visible = False)
 
 
         if event == "Search" and values["ITEMID"] == '' and values["ITEMNAME"] == '':
@@ -124,63 +124,63 @@ def gui_prompt2():
 
 
         if event == "back_getinfo":
-            window["l0"].update(visible = True)
-            window["l1"].update(visible = False)
+            window["l_menu"].update(visible = True)
+            window["l_getinfo"].update(visible = False)
 
         
-        #*Get Info* ends
+        #Get Info ends
 
 
 
-        # *Admin* start
+        # Admin start
         if event == "Admin Login":
-            window["l2"].update(visible = True)
-            window["l0"].update(visible = False)
+            window["l_adminlogin"].update(visible = True)
+            window["l_menu"].update(visible = False)
         if event == "back_login":
-            window["l0"].update(visible = True)
-            window["l2"].update(visible = False)
-        
+            window["l_menu"].update(visible = True)
+            window["l_adminlogin"].update(visible = False)
+
         if event == "Enter":
             name = ["vinay", "kalpit", "mathew"]
             password = ["ayo", "akhila123", "yo"]
             if values["NAME"] in name and values["PASSWORD"] in password:
-                window["l21"].update(visible = True)
-                window["l2"].update(visible = False)
+                window["l_stock"].update(visible = True)
+                window["l_adminlogin"].update(visible = False)
                 #stock updation
             else:
                 gui.Popup("YOU'RE NOT AUTHORISED PERSONNEl!!!")
         
         if values["stockupdation"] == "Add":
-            window["l211"].update(visible = True)
-            window["l21"].update(visible = False)
+            window["l_stockadd"].update(visible = True)
+            window["l_stock"].update(visible = False)
             pass
 
         if values["stockupdation"] == "Update":
-            window["l212"].update(visible = True)
-            window["l21"].update(visible = False)
+            window["l_stockupd"].update(visible = True)
+            window["l_stock"].update(visible = False)
             pass
 
         if values["stockupdation"] == "Delete":
-            window["l213"].update(visible = True)
-            window["l21"].update(visible = False)
+            window["l_stockdel"].update(visible = True)
+            window["l_stock"].update(visible = False)
             pass
 
 
         if event == "back_stock":
-            window["l0"].update(visible = True)
-            window["l21"].update(visible = False)
-        # *Admin* end
+            window["l_menu"].update(visible = True)
+            window["l_stock"].update(visible = False)
+        # Admin end
 
 
 
-        # *Bill*
+        # Bill
         if event == "Make BILL":
-            window["l3"].update(visible = True)
-            window["l0"].update(visible = False)
+            window["l_bill"].update(visible = True)
+            window["l_menu"].update(visible = False)
 
         if event == "back_bill":
-             window["l0"].update(visible = True)
-             window["l3"].update(visible = False)
+             window["l_menu"].update(visible = True)
+             window["l_bill"].update(visible = False)
 
              
         if event == "Add" and values["ID"] == '' and values["QTY"] == '':
@@ -189,7 +189,7 @@ def gui_prompt2():
 
         if event == "Add" and values["ID"] != '' and values["QTY"] != '':
 
-            #**** mathews code from school make bill**** change the below
+            #** mathews code from school make bill** change the below
             # data = [['banana',20,5],['bottles',200,4],['blah',10000,6]]
             i = values["ID"];
             cur.execute(f"SELECT * FROM ITEMTEST WHERE ID={i}")
@@ -205,16 +205,21 @@ def gui_prompt2():
         #^Bill^ end
 
 
-        #*Items* starts
+        #Items starts
         if event == "List all Items":
-            window["l4"].update(visible = True)
-            window["l0"].update(visible = False)
+            window["l_listitems"].update(visible = True)
+            window["l_menu"].update(visible = False)
 
+            cur.execute(f"SELECT * FROM ITEMTEST")
+            item = cur.fetchone()
+            infotable.append([item[0], item[1],item[2],item[3]])
+            window["tableitems"].update(values = infotable)
             #sql backend code?
+        
             
         if event == "back_allitems":
-             window["l0"].update(visible = True)
-             window["l4"].update(visible = False)
-        #*Items* end
+             window["l_menu"].update(visible = True)
+             window["l_listitems"].update(visible = False)
+        #Items end
     window.close()
 gui_prompt2()
