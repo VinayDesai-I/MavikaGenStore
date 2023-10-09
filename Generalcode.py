@@ -1,8 +1,18 @@
-def gui_propmt2():
+import PySimpleGUI as gui
+import mysql.connector as c
+
+cnc = c.connect(user= "root", host="localhost", password="password", database="project")
+if cnc.is_connected():
+    print("Connected to DB")
+cur = cnc.cursor()
+
+def gui_prompt2():
 
     #MAIN THINGS
     #from PIL import Image
-    data = [['banana',20,5],['bottles',200,4],['blah',10000,6]]
+    # data = [['banana',20,5],['bottles',200,4],['blah',10000,6]]
+    cur.execute("SELECT * FROM ITEMTEST ORDER BY ID;")
+    data = cur.fetchall()
     #supdation = ['Add', 'Update', 'Delete']
     price2 = []
     infotable = []
@@ -40,7 +50,7 @@ def gui_propmt2():
    
     #UNDER ADMIN LOGIN - "STOCK UPDATION"
     layout_stock = [ [gui.Text("Welcome to Stock Updation", expand_x = "True", justification = "centre")],
-                     [gui.Text("Select your Choice")],[gui.Listbox(values = ['Add', 'Update', 'Delete'], key = "stockupdation", select_mode = "single"],
+                     [gui.Text("Select your Choice")],[gui.Listbox(values = ['Add', 'Update', 'Delete'], key = "stockupdation", select_mode = "single")],
                      [gui.Button("Back", key = "back_stock")]
    ]
 
@@ -110,7 +120,7 @@ def gui_propmt2():
 
         if event == "Search" and values["ITEMID"] != '' and values["ITEMNAME"] != '':
             # mathew's code from make bILL
-            
+            print("")
 
 
         if event == "back_getinfo":
@@ -129,7 +139,7 @@ def gui_propmt2():
         if event == "back_login":
             window["l0"].update(visible = True)
             window["l2"].update(visible = False)
-
+        
         if event == "Enter":
             name = ["vinay", "kalpit", "mathew"]
             password = ["ayo", "akhila123", "yo"]
@@ -180,10 +190,12 @@ def gui_propmt2():
         if event == "Add" and values["ID"] != '' and values["QTY"] != '':
 
             #**** mathews code from school make bill**** change the below
-            data = [['banana',20,5],['bottles',200,4],['blah',10000,6]]
-                
-            price1 = int(float(values["QTY"]))*int(float(data[int(values["ID"])][2]))
-            infotable.append([values["ID"], data[int(values["ID"])][0],values["QTY"],price1])
+            # data = [['banana',20,5],['bottles',200,4],['blah',10000,6]]
+            i = values["ID"];
+            cur.execute(f"SELECT * FROM ITEMTEST WHERE ID={i}")
+            item = cur.fetchone()
+            price1 = int(values["QTY"])*int(item[2])
+            infotable.append([i, item[1],values["QTY"],price1])
             price2.append(price1)
             window["tablebill"].update(values = infotable)
             price = 0
@@ -206,4 +218,3 @@ def gui_propmt2():
         #*Items* end
     window.close()
 gui_prompt2()
-
