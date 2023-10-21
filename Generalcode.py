@@ -52,7 +52,7 @@ def gui_propmt2():
     layout_stock = [ [gui.Text("Welcome to Stock Updation", expand_x = "True", justification = "centre")],
                      [gui.Text("Select your Choice")],[gui.Listbox(values = ['Add', 'Update', 'Delete'], key = "stockupdation", select_mode = "single"],
                      [gui.Button("Back", key = "back_stock")]
-   ]
+    ]
 
 
     #UNDER STOCK UPDATION - "ADD" "UPDATE" "DELETE" separate
