@@ -77,13 +77,13 @@ def gui_propmt2():
                     [gui.Table(values =  infotable, headings = head, key = "tablebill", justification = "centre")],
                     [gui.Text("Total Price:", size = (10,1)), gui.Text(" ", size = (10,1), key = "p")],
                     [gui.Button("Back", key = "back_bill")] 
-        ]      
+    ]      
 
     #LIST ALL ITEMS 
     layout_listitems = [ [gui.Text("Welcome to All Items", expand_x = "True", justification = "centre")],
                          [gui.Table(values =  data, headings = head, key = "tableitems", justification = "centre")],
                          [gui.Button("Back", key = "back_allitems")]
-        ]
+    ]
 
     #MAIN LAYOUT
     layout = [ [gui.Column(layout_menu, key = "l_menu"),
@@ -95,7 +95,7 @@ def gui_propmt2():
                 gui.Column(layout_stockdel, key = "l_stockdel", visible = False),
                 gui.Column(layout_bill, key = "l_bill", visible = False),
                 gui.Column(layout_listitems, key = "l_listitems", visible = False)]
-        ]
+    ]
 
     # WINDOW
     window = gui.Window("Mavika Store", layout, resizable = True)
@@ -126,11 +126,9 @@ def gui_propmt2():
         if event == "back_getinfo":
             window["l_menu"].update(visible = True)
             window["l_getinfo"].update(visible = False)
-
         
         #Get Info ends
-
-
+        
 
         # Admin start
         if event == "Admin Login":
@@ -140,32 +138,52 @@ def gui_propmt2():
             window["l_menu"].update(visible = True)
             window["l_adminlogin"].update(visible = False)
 
+        #stock updation (FOR ENTRY)
         if event == "Enter":
             name = ["vinay", "kalpit", "mathew"]
             password = ["ayo", "akhila123", "yo"]
             if values["NAME"] in name and values["PASSWORD"] in password:
                 window["l_stock"].update(visible = True)
                 window["l_adminlogin"].update(visible = False)
-                #stock updation
+                
             else:
                 gui.Popup("YOU'RE NOT AUTHORISED PERSONNEl!!!")
-        
+
+        #stock updation
         if values["stockupdation"] == "Add":
             window["l_stockadd"].update(visible = True)
             window["l_stock"].update(visible = False)
+            
+            #mathews sql backend
+
+        if event == "back_stockadd":
+            window["l_stock"].update(visible = True)
+            window["l_stockadd"].update(visible = False)
             pass
 
         if values["stockupdation"] == "Update":
             window["l_stockupd"].update(visible = True)
             window["l_stock"].update(visible = False)
+            
+            #mathews sql backend
+
+        if event == "back_stockupd":
+            window["l_stock"].update(visible = True)
+            window["l_stockupd"].update(visible = False)
             pass
 
         if values["stockupdation"] == "Delete":
             window["l_stockdel"].update(visible = True)
             window["l_stock"].update(visible = False)
+            
+            #mathews sql backend
+
+        if event == "back_stockdel":
+            window["l_stock"].update(visible = True)
+            window["l_stockdel"].update(visible = False)
             pass
 
-
+        
         if event == "back_stock":
             window["l_menu"].update(visible = True)
             window["l_stock"].update(visible = False)
