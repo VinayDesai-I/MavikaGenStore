@@ -140,6 +140,7 @@ def gui_propmt2():
         if event == "Admin Login":
             window["l_adminlogin"].update(visible = True)
             window["l_menu"].update(visible = False)
+       
         if event == "back_login":
             window["l_menu"].update(visible = True)
             window["l_adminlogin"].update(visible = False)
