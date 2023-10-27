@@ -56,16 +56,21 @@ def gui_propmt2():
 
 
     #UNDER STOCK UPDATION - "ADD" "UPDATE" "DELETE" separate
-    layout_stockadd = [
-        
+    layout_stockadd = [ [gui.Text("Welcome to Stock (ADD)", expand_x = "True", justification = "centre")],
+                        [gui.Text("Enter Item ID", size = (12,1)), gui.Input(key = "ADDITEMID", do_not_clear = False)],
+                        [gui.Text("Enter New Quantity", size = (12,1)), gui.Input(key = "ADDQTY", do_not_clear = False)],
+                        [gui.Button("Change", kwy = "add_stock")], [gui.Button("Back", key = "back_stockadd")]
     ]
 
-    layout_stockupd = [
-        
+    layout_stockupd = [ [gui.Text("Welcome to Stock (UPDATION)", expand_x = "True", justification = "centre")],
+                        [gui.Text("Enter Item ID", size = (12,1)), gui.Input(key = "UPDITEMID", do_not_clear = False)],
+                        [gui.Text("Enter New Prize", size = (12,1)), gui.Input(key = "UPDPRIZE", do_not_clear = False)],
+                        [gui.Button("Change", kwy = "upd_stock")], [gui.Button("Back", key = "back_stockupd")]
     ]
 
-    layout_stockdel = [
-        
+    layout_stockdel = [ [gui.Text("Welcome to Stock (DELETION)", expand_x = "True", justification = "centre")],
+                        [gui.Text("Enter Item ID to Delete", size = (12,1)), gui.Input(key = "UPDITEMID", do_not_clear = False)],
+                        [gui.Button("Change", kwy = "del_stock")], [gui.Button("Back", key = "back_stockdel")]
     ]
 
   
@@ -107,8 +112,9 @@ def gui_propmt2():
 
         if event in (gui.WIN_CLOSED, "Exit"):
             break
-       
-        #Get Info starts
+
+        
+        # Get Info starts
         if event == "Get Information":
             window["l_getinfo"].update(visible = True)
             window["l_menu"].update(visible = False)
@@ -126,10 +132,10 @@ def gui_propmt2():
         if event == "back_getinfo":
             window["l_menu"].update(visible = True)
             window["l_getinfo"].update(visible = False)
-        
-        #Get Info ends
+        # Get Info ends
         
 
+        
         # Admin start
         if event == "Admin Login":
             window["l_adminlogin"].update(visible = True)
@@ -138,7 +144,7 @@ def gui_propmt2():
             window["l_menu"].update(visible = True)
             window["l_adminlogin"].update(visible = False)
 
-        #stock updation (FOR ENTRY)
+        #=stock updation (FOR ENTRY)=
         if event == "Enter":
             name = ["vinay", "kalpit", "mathew"]
             password = ["ayo", "akhila123", "yo"]
@@ -149,7 +155,7 @@ def gui_propmt2():
             else:
                 gui.Popup("YOU'RE NOT AUTHORISED PERSONNEl!!!")
 
-        #stock updation
+        #==stock updation==
         if values["stockupdation"] == "Add":
             window["l_stockadd"].update(visible = True)
             window["l_stock"].update(visible = False)
@@ -222,6 +228,7 @@ def gui_propmt2():
             window["p"].update(price)
         #^Bill^ end
 
+        
 
         #Items starts
         if event == "List all Items":
@@ -239,5 +246,6 @@ def gui_propmt2():
              window["l_menu"].update(visible = True)
              window["l_listitems"].update(visible = False)
         #Items end
+    
     window.close()
 gui_prompt2()
