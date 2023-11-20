@@ -18,9 +18,10 @@ def gui_propmt2():
     info_table_stockupd = []
     info_table_stockdel = []
     info_table_listitems = []
+    info_table_listitems2 = []
     info_table_alistitems = []
     head = ['ID','Item Name','Units','Price']
-    head1 = ['ID','Item Name','In-Stock(Units)','Price','Date']
+    head1 = ['ID','Item Name','In-Stock(Units)','Price','Manu. Date']
     headt = ['ID','Item Name','In-Stock(Units)','Price']
     head2 = ['Customer Name','Phone No.','Address']
     head3 = ['Customer Name','Items','Total Units','Total Price','Delivery']
@@ -34,16 +35,19 @@ def gui_propmt2():
     # DIFFERENT LAYOUTS
     
     #MAIN MENU
-    layout_menu = [ [gui.Text("!!Welcome To General Store!!", size = (20, 1), font = ("Cooper Black", 20), expand_x = True, justification = "centre")],
+    layout_menu = [ [gui.Text("!!Welcome To General Store!!", size = (20, 1), font = ("Cooper Black", 20),
+                              expand_x = True, justification = "centre")],
                     [gui.Image(filename = "gen.png", size = (275, 183),  expand_x = True, expand_y = True)],
-                    [gui.Column([[gui.Button("User"), gui.Button("Admin")]], element_justification = "centre", expand_x = "True")]
+                    [gui.Column([[gui.Button("User"), gui.Button("Admin")]], element_justification = "centre",
+                                expand_x = "True", expand_y = "True")]
     ]
     
     #USER LOGIN
-    layout_userlogin = [ [gui.Text("User Login Window", expand_x = "True", justification = "centre")],
+    layout_userlogin = [ [gui.Column([[gui.Text("User Login Window", expand_x = "True", justification = "centre")],
                          [gui.Text("Enter Name", size = (12,1)), gui.Input(key = "username", do_not_clear = False)],
                          [gui.Text("Enter Password", size = (12,1)), gui.Input(key = "userpassword", do_not_clear = False)],
-                         [gui.Button("Enter", key = "enter_userlogin"), gui.Button("Back", key = "back_userlogin"), gui.Push(), gui.Button("Register (New User)", key = "ureg")]
+                         [gui.Button("Enter", key = "enter_userlogin"), gui.Button("Back", key = "back_userlogin"), gui.Push(), gui.Button("Register (New User)", key = "ureg")]]
+                                     , element_justification = "centre", expand_x = "True", expand_y = "True")]
     ]
 
     #USER REGISTRATION 
@@ -80,12 +84,14 @@ def gui_propmt2():
     #USER SELF CHECKOUT 
     layout_selfcheckout = [ [gui.Text("Welcome to Self Check-Out", expand_x = "True", justification = "centre")],
                             [gui.Text("Enter ID", size = (16,1)), gui.Input(key = "id", do_not_clear = False, justification = "left", expand_x = "True")],
-                            [gui.Text("Enter Quantity (Units)", size = (16,1)), gui.Input(key = "qty", do_not_clear = False, justification = "left")],
-                            [gui.Button("Add")],
+                            [gui.Text("Enter Quantity (Units)", size = (16,1)), gui.Input(key = "qty", do_not_clear = False, justification = "left", expand_x = "True")],
+                            [gui.Button("Add to Bill"), gui.Text("All the Items, to Help You out!", expand_x = "True", justification = "centre")],
+                            [gui.Table(values =  info_table_listitems2, headings = head1, key = "tableitems2",
+                                    justification = "centre", expand_x = "True", auto_size_columns = True)],
                             [gui.Table(values =  info_table_bill, headings = head, key = "tablebill",
                                        justification = "centre", expand_x = "True", auto_size_columns = True)],
-                            [gui.Text("Total Price:", size = (10,1)), gui.Text(" ", size = (10,1), key = "p")],
-                            [gui.Button("Back", key = "back_selfcheckout"), gui.Button("Save", key = "savebill_selfcheckout"), gui.Button("Save-Place Delivery", key = "savedelivery_selfcheckout")],
+                            [gui.Text("Total Price:", size = (10,1)), gui.Text("₹"), gui.Text(" ", size = (10,1), key = "p", font = ("Courier", 15))],
+                            [gui.Button("Save", key = "savebill_selfcheckout"), gui.Button("Save-Place Delivery", key = "savedelivery_selfcheckout"), gui.Push(), gui.Button("Back", key = "back_selfcheckout")],
                             [gui.Text("Change Address \n(OPTIONAL)", size = (16,2)), gui.Input(key = "delivery_change", do_not_clear = False, justification = "left")]
     ]
 
@@ -145,7 +151,7 @@ def gui_propmt2():
     layout_stockdel = [ [gui.Text("Welcome to Stock (DELETION)", expand_x = "True", justification = "centre")],
                         [gui.Text("Enter Item ID to DELETE", size = (19,1)), gui.Input(key = "DELITEMID", do_not_clear = False)],
                         [gui.Table(values =  info_table_stockdel, headings = head1, key = "tablestockdel",
-                                   justification = "centre", expand_x = "True", auto_size_columns = True, expand_y = "True")],
+                                   justification = "centre", expand_x = "True", expand_y = "True", auto_size_columns = True)],
                         [gui.Text("The Following Details Have Been Deleted", size = (20,1), key = "del", visible = False)],
                         [gui.Button("Delete", key = "del_stock"), gui.Button("Back", key = "back_stockdel")]
     ]
@@ -174,24 +180,25 @@ def gui_propmt2():
     ]
 
     #MAIN LAYOUT
-    layout = [ [gui.Column(layout_menu, key = "l_menu"),
-                gui.Column(layout_userlogin, key = "l_ulogin", visible = False),
-                gui.Column(layout_userreg, key = "l_ureg", visible = False),
-                gui.Column(layout_usermenu, key = "l_umenu", visible = False),      
-                gui.Column(layout_getinfo, key = "l_getinfo", visible = False),
-                gui.Column(layout_listitems, key = "l_listitems", visible = False),
-                gui.Column(layout_selfcheckout, key = "l_scheckout", visible = False),
-                gui.Column(layout_adminlogin, key = "l_alogin", visible = False),
-                gui.Column(layout_adminreg, key = "l_areg", visible = False),
-                gui.Column(layout_adminmenu, key = "l_amenu", visible = False),
-                gui.Column(layout_iteminfo, key = "l_iteminfo", visible = False),
-                gui.Column(layout_tabrestock, key = "l_restock", visible = False),
-                gui.Column(layout_delivery, key = "l_delivery", visible = False),
-                gui.Column(layout_billhistory, key = "l_billhist", visible = False)]
+    layout = [ [gui.Column(layout_menu, key = "l_menu", justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_userlogin, key = "l_ulogin", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_userreg, key = "l_ureg", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_usermenu, key = "l_umenu", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),  
+                gui.Column(layout_getinfo, key = "l_getinfo", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_listitems, key = "l_listitems", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_selfcheckout, key = "l_scheckout", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_adminlogin, key = "l_alogin", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_adminreg, key = "l_areg", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_adminmenu, key = "l_amenu", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_iteminfo, key = "l_iteminfo", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_tabrestock, key = "l_restock", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_delivery, key = "l_delivery", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_billhistory, key = "l_billhist", visible = False, justification = "centre", expand_x = "True", expand_y = "True")]
     ]
 
    # WINDOW
-    window = gui.Window("Mavika Store", layout, resizable = True)
+    window = gui.Window("Mavika Store", layout, finalize = True, element_justification = "centre")
+    #window.maximize()
 
     #while-event loop
     while True:
@@ -213,9 +220,12 @@ def gui_propmt2():
             window["l_ulogin"].update(visible = False)
 
         # User login
-        if event == "enter_userlogin":
+        if event == "enter_userlogin"  and values["username"] == '' and values["userpassword"] == '':
+            gui.Popup("You've Not Filled The Login Credentials")
 
-            data1 = " "
+        if event == "enter_userlogin" and values["username"] != '' and values["userpassword"] != '':
+
+            data1 = ""
             cur.execute("SELECT * FROM USER")
             itemn3 = cur.fetchall()
             for i in itemn3:
@@ -228,7 +238,7 @@ def gui_propmt2():
                  window["l_umenu"].update(visible = True)
                  window["l_ulogin"].update(visible = False)
             else:
-                gui.Popup("INVALID CREDENTIALS")
+                gui.Popup("Details Not Found In Database")
         
         if event == "back_userlogin":
             window["l_menu"].update(visible = True)
@@ -306,18 +316,27 @@ def gui_propmt2():
             window["l_scheckout"].update(visible = True)
             window["l_umenu"].update(visible = False)
 
+            cur.execute("SELECT * FROM ITEMS")
+            itemn12 = cur.fetchall()
+            for i in itemn12:
+                info_table_listitems2.append([i[0], i[1], i[2], i[3], i[4]])
+            window["tableitems2"].update(values = info_table_listitems2)
+
         if event == "back_selfcheckout":
              window["l_umenu"].update(visible = True)
              window["l_scheckout"].update(visible = False)
              info_table_bill.clear()
              window["tablebill"].update(values = info_table_bill)
+             
+             info_table_listitems2.clear()
+             window["tableitems2"].update(values = info_table_listitems2)
 
 
         #==make bill==
-        if event == "Add" and values["id"] == '' and values["qty"] == '':
+        if event == "Add to Bill" and values["id"] == '' and values["qty"] == '':
             gui.Popup("Please Enter ID and QUANTITY")
 
-        if event == "Add" and values["id"] != '' and values["qty"] != '':
+        if event == "Add to Bill" and values["id"] != '' and values["qty"] != '':
             
             i = int(values["id"])
             q = int(values["qty"])
@@ -340,6 +359,13 @@ def gui_propmt2():
 
             Q = Q + q
             titems = titems + item[1] + ","
+
+            info_table_listitems2.clear()
+            cur.execute("SELECT * FROM ITEMS")
+            itemn11 = cur.fetchall()
+            for i in itemn11:
+                info_table_listitems2.append([i[0], i[1], i[2], i[3], i[4]])
+            window["tableitems2"].update(values = info_table_listitems2)
 
         #++save bill++
         if event == "savebill_selfcheckout":
@@ -388,7 +414,10 @@ def gui_propmt2():
             window["l_alogin"].update(visible = False)
         
         # Admin login
-        if event == "enter_adminlogin":
+        if event == "enter_adminlogin" and values["admname"] == '' and values["admpassword"] == '':
+            gui.Popup("Fill The Login Credentials")
+            
+        if event == "enter_adminlogin"  and values["admname"] != '' and values["admpassword"] != '':
 
             data2 = " "
             cur.execute("SELECT * FROM ADMINS")
