@@ -354,7 +354,6 @@ def gui_propmt2():
             query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(uq, q, values["id"])
             cur.execute(query2)
             cnc.commit()
-            print(uq-q)
 
             Q = Q + q
             titems = titems + item[1] + ","
