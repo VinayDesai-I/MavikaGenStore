@@ -197,7 +197,7 @@ def gui_propmt2():
     ]
 
    # WINDOW
-    window = gui.Window("Mavika Store", layout, finalize = True, element_justification = "centre")
+    window = gui.Window("PyFresh Walk-In Store", layout, finalize = True, element_justification = "centre")
     #window.maximize()
 
     #while-event loop
@@ -308,14 +308,13 @@ def gui_propmt2():
              window["l_listitems"].update(visible = False)
              info_table_listitems.clear()
              window["tableitems"].update(values = info_table_listitems)
-             
         #List of Items end
         
         # Selfcheckout
         if event == "Self Check-Out":
             window["l_scheckout"].update(visible = True)
             window["l_umenu"].update(visible = False)
-
+            
             cur.execute("SELECT * FROM ITEMS")
             itemn12 = cur.fetchall()
             for i in itemn12:
@@ -461,7 +460,6 @@ def gui_propmt2():
             window["l_amenu"].update(visible = False)
             info_table_alistitems.clear()
             window["tableitems1"].update(values = info_table_alistitems)
-
         #admin end
 
          # Item Info starts
@@ -474,12 +472,15 @@ def gui_propmt2():
 
         if event == "search_aiteminfo" and values["aITEMID"] != '':
             
-            gi1 = int(values["aITEMID"])
-            cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi1))
-            item = cur.fetchone()
-            info_table_aiteminfo.append([item[0], item[1], item[2], item[3], item[4]])
-            window["tableaiteminfo"].update(values = info_table_aiteminfo)
-
+            while values["aITEMID"] not in info_table_aiteminfo:
+                gi1 = int(values["aITEMID"])
+                cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi1))
+                item = cur.fetchone()
+                info_table_aiteminfo.append([item[0], item[1], item[2], item[3], item[4]])
+                window["tableaiteminfo"].update(values = info_table_aiteminfo)
+            else:
+                gui.Popup("The Entered ID's Information is Already Displayed")
+                
         if event == "back_aiteminfo":
             window["l_amenu"].update(visible = True)
             window["l_iteminfo"].update(visible = False)
@@ -508,12 +509,6 @@ def gui_propmt2():
             info_table_stockadd.append([addid, addname, addprice, addinst, adddate])
             window["tablestockadd"].update(values = info_table_stockadd)
             window["add"].update(visible = True)
-            
-            cur.execute("SELECT * FROM ITEMS")
-            item2 = cur.fetchall()
-            for i  in item2:
-                info_table_alistitems.append([i[0], i[1], i[2], i[3], i[4]])
-            window["tableitems1"].update(values = info_table_alistitems)
 
         if event == "add_stock" and (values["ADDITEMID"], values["ADDITEMNAME"], values["ADDSTOCK"], values["ADDPRICE"], values["ADDDATE"]) == ('','','','',''):
             gui.Popup("Please Enter the Above Values")
