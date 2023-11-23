@@ -77,6 +77,18 @@ def gui_propmt2():
                                   justification = "centre", expand_x = "True", auto_size_columns = True)],
                        [gui.Button("Back", key = "back_ugetinfo")]
     ]
+    #USER MY BILL
+    layout_mybill = [ [gui.Text("Welcome to My Bills", expand_x = "True", justification = "centre")],
+                         [gui.Table(values =  info_table_umybill, headings = head3, key = "tableumybill",
+                                    justification = "centre", expand_x = "True", auto_size_columns = True)],
+                         [gui.Button("Back", key = "back_umybill")]
+        
+    ]
+
+    #tab
+    layout_tabgimb = [ [gui.TabGroup([[gui.Tab("Item Information", layout_getinfo), 
+                                       gui.Tab("My Bills", layout_mybill)]], tab_location = "centertop")]
+    ]
 
     #USER LIST of ITEMS 
     layout_listitems = [ [gui.Text("Welcome to List of Items", expand_x = "True", justification = "centre")],
@@ -188,7 +200,7 @@ def gui_propmt2():
                 gui.Column(layout_userlogin, key = "l_ulogin", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
                 gui.Column(layout_userreg, key = "l_ureg", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
                 gui.Column(layout_usermenu, key = "l_umenu", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),  
-                gui.Column(layout_getinfo, key = "l_getinfo", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
+                gui.Column(layout_tabgimb, key = "l_getinfomb", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
                 gui.Column(layout_listitems, key = "l_listitems", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
                 gui.Column(layout_selfcheckout, key = "l_scheckout", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
                 gui.Column(layout_adminlogin, key = "l_alogin", visible = False, justification = "centre", expand_x = "True", expand_y = "True"),
@@ -230,11 +242,11 @@ def gui_propmt2():
         if event == "enter_userlogin" and values["username"] != '' and values["userpassword"] != '':
 
             data1 = ""
-            cur.execute("SELECT * FROM USER")
+            cur.execute("SELECT  FROM USER")
             itemn3 = cur.fetchall()
             for i in itemn3:
                 data1 = data1 + str(i)
-                
+            print(data1)
             NAME1 = values["username"]
             PASSWD = values["userpassword"]
             
@@ -275,7 +287,7 @@ def gui_propmt2():
             
         # Get Info starts
         if event == "Get Information":
-            window["l_getinfo"].update(visible = True)
+            window["l_getinfomb"].update(visible = True)
             window["l_umenu"].update(visible = False)
 
         if event == "search_ugetinfo" and values["uITEMID"] == '':
@@ -284,33 +296,54 @@ def gui_propmt2():
         if event == "search_ugetinfo" and values["uITEMID"] != '':
 
             gi = int(values["uITEMID"])
-            try:
-                cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi))
-            except:
+
+            datagi = ""
+            cur.execute("SELECT * FROM ITEMS")
+            itemn15 = cur.fetchall()
+            for i in itemn15:
+                datagi = datagi + str(i)
+            print(datagi)
+            
+            if gi in datagi:
+                 cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi))    
+                 itemn2 = cur.fetchone()
+                 info_table_ugetinfo.append([itemn2[0], itemn2[1], itemn2[2], itemn2[3], itemn2[4]])
+                 window["tableugetinfo"].update(values = info_table_ugetinfo)
+            else:
                 gui.Popup("Entered Item ID Not Found")
-            itemn2 = cur.fetchone()
-            info_table_ugetinfo.append([itemn2[0], itemn2[1], itemn2[2], itemn2[3], itemn2[4]])
-            window["tableugetinfo"].update(values = info_table_ugetinfo)
 
         if event == "search_umybill" and values["uDATE"] == '':
-            gui.Popup("Please Enter Item ID")
+            gui.Popup("Please Enter A Date")
 
         if event == "search_umybill" and values["uDATE"] != '':
-
             
-
+            d = values["uDATE"]
+            datad = ""
+            cur.execute("SELECT * FROM BILLS")
+            itemn16 = cur.fetchall()
+            for i in itemn16:
+                datad = datad + str(i)
+            print(datad)
+            
+            if d in datad:
+                 cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi))    
+                 itemn2 = cur.fetchone()
+                 info_table_umybill.append([itemn21[0], itemn21[1], itemn21[2], itemn21[3], itemn21[4]], itemn21[5])
+                 window["tableumybill"].update(values = info_table_umybill)
+            else:
+                gui.Popup("Entered Date Not Found")
+            
         if event == "back_ugetinfo":
             window["l_umenu"].update(visible = True)
-            window["l_getinfo"].update(visible = False)
+            window["l_getinfomb"].update(visible = False)
             info_table_ugetinfo.clear()
             window["tableugetinfo"].update(values = info_table_ugetinfo)
 
         if event == "back_umybill":
             window["l_umenu"].update(visible = True)
-            window["l_getinfo"].update(visible = False)
+            window["l_getinfomb"].update(visible = False)
             info_table_umybill.clear()
             window["tableumybill"].update(values = info_table_umybill)
-            
         # Get Info ends
         
         #List of Items
@@ -380,7 +413,7 @@ def gui_propmt2():
 
             Q = Q + q
             titems = titems + item[1] + ","
-
+            
         #++save bill++
         if event == "savebill_selfcheckout":
 
@@ -413,7 +446,7 @@ def gui_propmt2():
 
             y = "Yes"
             today = date.today()
-            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, y))
+            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, today, y))
             cnc.commit()
 
             for i in len(lid):
@@ -439,7 +472,7 @@ def gui_propmt2():
 
             y = "Yes"
             today = date.today()
-            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, y))
+            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, today, y))
             cnc.commit()
 
             for i in len(lid):
@@ -472,12 +505,12 @@ def gui_propmt2():
             
         if event == "enter_adminlogin"  and values["admname"] != '' and values["admpassword"] != '':
 
-            data2 = " "
+            data2 = ""
             cur.execute("SELECT * FROM ADMINS")
             itemn4 = cur.fetchall()
             for i in itemn4:
                 data2 = data2 + str(i)
-
+            print(data2)
             if values["admname"] in data2 and values["admpassword"] in data2:
 
                  cur.execute("SELECT * FROM ITEMS")
