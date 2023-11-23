@@ -1,4 +1,5 @@
 import PySimpleGUI as gui
+from datetime import date
 import pymysql as c
 cnc = c.connect(host="localhost", user= "root", passwd="1234", database="vinayproject2")
 
@@ -8,6 +9,9 @@ cur = cnc.cursor()
 
 def gui_propmt2():
 
+    lid = []
+    lqty = []
+    luq = []
     price2 = []
     info_table_ugetinfo = []
     info_table_aiteminfo = []
@@ -280,16 +284,33 @@ def gui_propmt2():
         if event == "search_ugetinfo" and values["uITEMID"] != '':
 
             gi = int(values["uITEMID"])
-            cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi))
+            try:
+                cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi))
+            except:
+                gui.Popup("Entered Item ID Not Found")
             itemn2 = cur.fetchone()
             info_table_ugetinfo.append([itemn2[0], itemn2[1], itemn2[2], itemn2[3], itemn2[4]])
             window["tableugetinfo"].update(values = info_table_ugetinfo)
+
+        if event == "search_umybill" and values["uDATE"] == '':
+            gui.Popup("Please Enter Item ID")
+
+        if event == "search_umybill" and values["uDATE"] != '':
+
+            
 
         if event == "back_ugetinfo":
             window["l_umenu"].update(visible = True)
             window["l_getinfo"].update(visible = False)
             info_table_ugetinfo.clear()
             window["tableugetinfo"].update(values = info_table_ugetinfo)
+
+        if event == "back_umybill":
+            window["l_umenu"].update(visible = True)
+            window["l_getinfo"].update(visible = False)
+            info_table_umybill.clear()
+            window["tableumybill"].update(values = info_table_umybill)
+            
         # Get Info ends
         
         #List of Items
@@ -322,14 +343,17 @@ def gui_propmt2():
             window["tableitems2"].update(values = info_table_listitems2)
 
         if event == "back_selfcheckout":
-             window["l_umenu"].update(visible = True)
-             window["l_scheckout"].update(visible = False)
-             info_table_bill.clear()
-             window["tablebill"].update(values = info_table_bill)
+            window["l_umenu"].update(visible = True)
+            window["l_scheckout"].update(visible = False)
+            info_table_bill.clear()
+            window["tablebill"].update(values = info_table_bill)
              
-             info_table_listitems2.clear()
-             window["tableitems2"].update(values = info_table_listitems2)
-
+            info_table_listitems2.clear()
+            window["tableitems2"].update(values = info_table_listitems2)
+            
+            lid.clear()
+            lqty.clear()
+            luq.clear()
 
         #==make bill==
         if event == "Add to Bill" and values["id"] == '' and values["qty"] == '':
@@ -339,9 +363,12 @@ def gui_propmt2():
             
             i = int(values["id"])
             q = int(values["qty"])
+            lid.append(values["id"])
+            lqty.append(int(values["qty"]))
             cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(i))
             item = cur.fetchone()
             uq = int(item[2])
+            luq.append(int(item[2]))
             price1 = int(values["qty"])*int(item[3])
             info_table_bill.append([i, item[1], q, price1])
             price2.append(price1)
@@ -351,12 +378,21 @@ def gui_propmt2():
                 price+=i
             window["p"].update(price)
 
-            query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(uq, q, values["id"])
-            cur.execute(query2)
-            cnc.commit()
-
             Q = Q + q
             titems = titems + item[1] + ","
+
+        #++save bill++
+        if event == "savebill_selfcheckout":
+
+            n = "No"
+            today = date.today()
+            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, today, n))
+            cnc.commit()
+
+            for i in len(lid):
+                query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
+                cur.execute(query2)
+                cnc.commit()
 
             info_table_listitems2.clear()
             cur.execute("SELECT * FROM ITEMS")
@@ -364,13 +400,6 @@ def gui_propmt2():
             for i in itemn11:
                 info_table_listitems2.append([i[0], i[1], i[2], i[3], i[4]])
             window["tableitems2"].update(values = info_table_listitems2)
-
-        #++save bill++
-        if event == "savebill_selfcheckout":
-
-            n = "No"
-            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}')".format(NAME1, titems, Q, price, n))
-            cnc.commit()
   
             gui.Popup("Bill Saved Successfully")
 
@@ -383,8 +412,21 @@ def gui_propmt2():
             cnc.commit()
 
             y = "Yes"
-            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}')".format(NAME1, titems, Q, price, y))
+            today = date.today()
+            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, y))
             cnc.commit()
+
+            for i in len(lid):
+                query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
+                cur.execute(query2)
+                cnc.commit()
+
+            info_table_listitems2.clear()
+            cur.execute("SELECT * FROM ITEMS")
+            itemn11 = cur.fetchall()
+            for i in itemn11:
+                info_table_listitems2.append([i[0], i[1], i[2], i[3], i[4]])
+            window["tableitems2"].update(values = info_table_listitems2)
             
             gui.Popup("Bill Saved and Delivery Placed Successfully")
 
@@ -396,8 +438,21 @@ def gui_propmt2():
             cnc.commit()
 
             y = "Yes"
-            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}')".format(NAME1, titems, Q, price, y))
+            today = date.today()
+            cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, y))
             cnc.commit()
+
+            for i in len(lid):
+                query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
+                cur.execute(query2)
+                cnc.commit()
+
+            info_table_listitems2.clear()
+            cur.execute("SELECT * FROM ITEMS")
+            itemn11 = cur.fetchall()
+            for i in itemn11:
+                info_table_listitems2.append([i[0], i[1], i[2], i[3], i[4]])
+            window["tableitems2"].update(values = info_table_listitems2)
             
             gui.Popup("Bill Saved and New Delivery Placed Successfully")
         #^selfcheckout^ end
@@ -626,7 +681,7 @@ def gui_propmt2():
              cur.execute("SELECT * FROM BILLS")
              item7 = cur.fetchall()
              for i  in item7:
-                info_table_billhist.append([i[0], i[1], i[2], i[3], i[4]])
+                info_table_billhist.append([i[0], i[1], i[2], i[3], i[4]], i[5])
              window["tablebillhist"].update(values = info_table_billhist)
 
         if event == "back_bill":
