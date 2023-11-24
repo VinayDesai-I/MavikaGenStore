@@ -79,8 +79,8 @@ def gui_propmt2():
     ]
     #USER MY BILL
     layout_mybill = [ [gui.Text("Welcome to My Bills", expand_x = "True", justification = "centre")],
-                     [gui.Text("Enter Bill Date", size = (10,1)), gui.Input(key = "uDATE", do_not_clear = False)],
-                       [gui.Button("Search", key = "search_umybill")],
+                      [gui.Text("Enter Bill Date", size = (10,1)), gui.Input(key = "uDATE", do_not_clear = False)],
+                      [gui.Button("Search", key = "search_umybill")],
                       [gui.Table(values =  info_table_umybill, headings = head3, key = "tableumybill",
                                     justification = "centre", expand_x = "True", auto_size_columns = True)],
                       [gui.Button("Back", key = "back_umybill")]
@@ -88,8 +88,8 @@ def gui_propmt2():
     ]
 
     #tab
-    layout_tabgimb = [ [gui.TabGroup([[gui.Tab("Item Information", layout_getinfo), 
-                                       gui.Tab("My Bills", layout_mybill)]], tab_location = "centertop")]
+    layout_tabgimb = [ [gui.TabGroup([[gui.Tab("My Bills", layout_mybill),
+                                       gui.Tab("Item Information", layout_getinfo)]], tab_location = "centertop")]
     ]
 
     #USER LIST of ITEMS 
