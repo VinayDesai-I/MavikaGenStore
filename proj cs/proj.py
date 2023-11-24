@@ -242,7 +242,7 @@ def gui_propmt2():
         if event == "enter_userlogin" and values["username"] != '' and values["userpassword"] != '':
 
             data1 = ""
-            cur.execute("SELECT  FROM USER")
+            cur.execute("SELECT * FROM USER")
             itemn3 = cur.fetchall()
             for i in itemn3:
                 data1 = data1 + str(i)
