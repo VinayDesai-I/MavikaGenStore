@@ -79,9 +79,11 @@ def gui_propmt2():
     ]
     #USER MY BILL
     layout_mybill = [ [gui.Text("Welcome to My Bills", expand_x = "True", justification = "centre")],
-                         [gui.Table(values =  info_table_umybill, headings = head3, key = "tableumybill",
+                     [gui.Text("Enter Bill Date", size = (10,1)), gui.Input(key = "uDATE", do_not_clear = False)],
+                       [gui.Button("Search", key = "search_umybill")],
+                      [gui.Table(values =  info_table_umybill, headings = head3, key = "tableumybill",
                                     justification = "centre", expand_x = "True", auto_size_columns = True)],
-                         [gui.Button("Back", key = "back_umybill")]
+                      [gui.Button("Back", key = "back_umybill")]
         
     ]
 
