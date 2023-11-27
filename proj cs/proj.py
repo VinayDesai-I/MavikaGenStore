@@ -23,7 +23,6 @@ def gui_propmt2():
     info_table_alistitems = []
     head = ['ID','Item Name','Units','Price']
     head1 = ['ID','Item Name','In-Stock(Units)','Price','Manu. Date']
-    headt = ['ID','Item Name','In-Stock(Units)','Price']
     head2 = ['Customer Name','Phone No.','Address']
     head3 = ['Customer Name','Items','Total Units','Total Price','Delivery', 'Bill Date']
     lid = []
@@ -164,7 +163,7 @@ def gui_propmt2():
                         [gui.Text("Enter Item ID", size = (19,1)), gui.Input(key = "UPDITEMID", do_not_clear = False)],
                         [gui.Text("Enter New Quantity(Units)", size = (19,1)), gui.Input(key = "UPDQTY", do_not_clear = False)],
                         [gui.Text("Enter New Price(Rupees)", size = (19,1)), gui.Input(key = "UPDPRICE", do_not_clear = False)],
-                        [gui.Table(values =  info_table_stockupd, headings = headt, key = "tablestockupd",
+                        [gui.Table(values =  info_table_stockupd, headings = head1, key = "tablestockupd",
                                    justification = "centre", expand_x = "True", auto_size_columns = True, expand_y = "True")],
                         [gui.Text("The Following Details Have Been Updated", size = (20,1), key = "upd", visible = False)],
                         [gui.Button("Update", key = "upd_stock"), gui.Button("Back", key = "back_stockupd")]
@@ -541,7 +540,7 @@ def gui_propmt2():
             pd1 = values["admregpassword"]
             cur.execute("INSERT INTO ADMINS VALUES ('{}', '{}')".format(name2, pd1))
             cnc.commit()
-            gui.Popup("Welcome To Mavika")
+            gui.Popup("Welcome To PyFresh")
         
         if event == "back_admreg":
             window["l_alogin"].update(visible = True)
@@ -627,7 +626,10 @@ def gui_propmt2():
             updprice = int(values["UPDPRICE"])
             cur.execute("UPDATE ITEMS set STOCK_QTY = {}, ITEM_PRICE = {} where ITEM_ID = {}".format(updqty, updprice, values["UPDITEMID"]))
             cnc.commit()
-            info_table_stockupd.append([updid, updqty, updprice])
+            
+            cur.execute(“SELECT * FROM ITEMS WHERE ITEM_ID = {}”.format(updid))
+            item99 = cur.fetchone()
+            info_table_stockupd.append([item99[0], item99[1], item99[2], item99[3], item99[4]])
             window["tablestockupd"].update(values = info_table_stockupd)
             window["upd"].update(visible = True)
 
