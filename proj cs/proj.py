@@ -8,15 +8,12 @@ print(cnc)
 cur = cnc.cursor()
 
 def gui_propmt2():
-
-    lid = []
-    lqty = []
-    luq = []
-    price2 = []
+    # MAIN THINGS
     info_table_ugetinfo = []
     info_table_aiteminfo = []
     info_table_bill = []
     info_table_billhist = []
+    info_table_umybill = []
     info_table_delbill = []
     info_table_stockadd = []
     info_table_stockupd = []
@@ -28,12 +25,16 @@ def gui_propmt2():
     head1 = ['ID','Item Name','In-Stock(Units)','Price','Manu. Date']
     headt = ['ID','Item Name','In-Stock(Units)','Price']
     head2 = ['Customer Name','Phone No.','Address']
-    head3 = ['Customer Name','Items','Total Units','Total Price','Delivery']
+    head3 = ['Customer Name','Items','Total Units','Total Price','Delivery', 'Bill Date']
+    lid = []
+    lqty = []
+    luq = []
+    price2 = []
     price1 = 0
     Q = 0
     titems = " "
     
-    # Theme
+    # THEME
     gui.theme("DarkAmber")
     
     # DIFFERENT LAYOUTS
@@ -77,7 +78,8 @@ def gui_propmt2():
                                   justification = "centre", expand_x = "True", auto_size_columns = True)],
                        [gui.Button("Back", key = "back_ugetinfo")]
     ]
-    #USER MY BILL
+
+    #USER BILLS
     layout_mybill = [ [gui.Text("Welcome to My Bills", expand_x = "True", justification = "centre")],
                       [gui.Text("Enter Bill Date", size = (10,1)), gui.Input(key = "uDATE", do_not_clear = False)],
                       [gui.Button("Search", key = "search_umybill")],
@@ -99,7 +101,7 @@ def gui_propmt2():
                          [gui.Button("Back", key = "back_listitems")]
     ]
 
-    #USER SELF CHECKOUT 
+    #USER SELF CHECK-OUT 
     layout_selfcheckout = [ [gui.Text("Welcome to Self Check-Out", expand_x = "True", justification = "centre")],
                             [gui.Text("Enter ID", size = (16,1)), gui.Input(key = "id", do_not_clear = False, justification = "left", expand_x = "True")],
                             [gui.Text("Enter Quantity (Units)", size = (16,1)), gui.Input(key = "qty", do_not_clear = False, justification = "left", expand_x = "True")],
@@ -144,6 +146,7 @@ def gui_propmt2():
     ]
 
     #RESTOCK
+    #ADD ITEMS
     layout_stockadd = [ [gui.Text("Add Stock (Item)", expand_x = "True", justification = "centre")],
                         [gui.Text("Enter New Item ID", size = (18,1)), gui.Input(key = "ADDITEMID", do_not_clear = False)],
                         [gui.Text("Enter New Item Name", size = (18,1)), gui.Input(key = "ADDITEMNAME", do_not_clear = False)],
@@ -156,6 +159,7 @@ def gui_propmt2():
                         [gui.Button("Add", key = "add_stock"), gui.Button("Back", key = "back_stockadd")]
     ]
 
+    #UPDATE ITEMS
     layout_stockupd = [ [gui.Text("Update Stock (Price)", expand_x = "True", justification = "centre")],
                         [gui.Text("Enter Item ID", size = (19,1)), gui.Input(key = "UPDITEMID", do_not_clear = False)],
                         [gui.Text("Enter New Quantity(Units)", size = (19,1)), gui.Input(key = "UPDQTY", do_not_clear = False)],
@@ -166,6 +170,7 @@ def gui_propmt2():
                         [gui.Button("Update", key = "upd_stock"), gui.Button("Back", key = "back_stockupd")]
     ]
 
+    #DELETE ITEM
     layout_stockdel = [ [gui.Text("Welcome to Stock (DELETION)", expand_x = "True", justification = "centre")],
                         [gui.Text("Enter Item ID to DELETE", size = (19,1)), gui.Input(key = "DELITEMID", do_not_clear = False)],
                         [gui.Table(values =  info_table_stockdel, headings = head1, key = "tablestockdel",
@@ -216,19 +221,17 @@ def gui_propmt2():
 
    # WINDOW
     window = gui.Window("PyFresh Walk-In Store", layout, finalize = True, element_justification = "centre")
-    #window.maximize()
-
-    #while-event loop
+    
+   # WHILE-EVENT-LOOP
     while True:
     
         #ESTABLISHING
         event, values = window.read()
 
-        #START
         if event in (gui.WIN_CLOSED, "Exit"):
             break
 
-        # user
+        # --User Start--
         if event == "User":
             window["l_ulogin"].update(visible = True)
             window["l_menu"].update(visible = False)
@@ -237,7 +240,7 @@ def gui_propmt2():
             window["l_menu"].update(visible = True)
             window["l_ulogin"].update(visible = False)
 
-        # User login
+        # User Login
         if event == "enter_userlogin"  and values["username"] == '' and values["userpassword"] == '':
             gui.Popup("You've Not Filled The Login Credentials")
 
@@ -285,9 +288,9 @@ def gui_propmt2():
         if event == "back_userreg":
             window["l_ulogin"].update(visible = True)
             window["l_ureg"].update(visible = False)
-        #user end
+        # --User End--
             
-        # Get Info starts
+        # --Get Info Start--
         if event == "Get Information":
             window["l_getinfomb"].update(visible = True)
             window["l_umenu"].update(visible = False)
@@ -346,9 +349,9 @@ def gui_propmt2():
             window["l_getinfomb"].update(visible = False)
             info_table_umybill.clear()
             window["tableumybill"].update(values = info_table_umybill)
-        # Get Info ends
+        # --Get Info End--
         
-        #List of Items
+        # --List of Items Start--
         if event == "List Of Items":
             window["l_listitems"].update(visible = True)
             window["l_umenu"].update(visible = False)
@@ -364,9 +367,9 @@ def gui_propmt2():
              window["l_listitems"].update(visible = False)
              info_table_listitems.clear()
              window["tableitems"].update(values = info_table_listitems)
-        #List of Items end
+        # --List of Items End--
         
-        # Selfcheckout
+        # --Self checkout Start--
         if event == "Self Check-Out":
             window["l_scheckout"].update(visible = True)
             window["l_umenu"].update(visible = False)
@@ -390,7 +393,7 @@ def gui_propmt2():
             lqty.clear()
             luq.clear()
 
-        #==make bill==
+        # Make Bill
         if event == "Add to Bill" and values["id"] == '' and values["qty"] == '':
             gui.Popup("Please Enter ID and QUANTITY")
 
@@ -416,7 +419,7 @@ def gui_propmt2():
             Q = Q + q
             titems = titems + item[1] + ","
             
-        #++save bill++
+        # Save Bill
         if event == "savebill_selfcheckout":
 
             n = "No"
@@ -424,7 +427,7 @@ def gui_propmt2():
             cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, today, n))
             cnc.commit()
 
-            for i in len(lid):
+            for i in rangelen((lid)):
                 query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
                 cur.execute(query2)
                 cnc.commit()
@@ -438,7 +441,7 @@ def gui_propmt2():
   
             gui.Popup("Bill Saved Successfully")
 
-        # ===delivery placing===
+        # Delivery Placing
         if event == "savedelivery_selfcheckout" and values["delivery_change"] == '':
 
             cur.execute("SELECT user_number, user_address FROM USER WHERE user_name = '{}'".format(NAME1))
@@ -451,7 +454,7 @@ def gui_propmt2():
             cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, today, y))
             cnc.commit()
 
-            for i in len(lid):
+            for i in range(len(lid)):
                 query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
                 cur.execute(query2)
                 cnc.commit()
@@ -477,7 +480,7 @@ def gui_propmt2():
             cur.execute("INSERT INTO BILLS VALUES ('{}', '{}', {}, {}, '{}', '{}')".format(NAME1, titems, Q, price, today, y))
             cnc.commit()
 
-            for i in len(lid):
+            for i in range(len(lid)):
                 query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
                 cur.execute(query2)
                 cnc.commit()
@@ -490,9 +493,9 @@ def gui_propmt2():
             window["tableitems2"].update(values = info_table_listitems2)
             
             gui.Popup("Bill Saved and New Delivery Placed Successfully")
-        #^selfcheckout^ end
+        # --Self Checkout End--
 
-        # admin
+        # --Admin Start--
         if event == "Admin":
             window["l_alogin"].update(visible = True)
             window["l_menu"].update(visible = False)
@@ -501,7 +504,7 @@ def gui_propmt2():
             window["l_menu"].update(visible = True)
             window["l_alogin"].update(visible = False)
         
-        # Admin login
+        # Admin Login
         if event == "enter_adminlogin" and values["admname"] == '' and values["admpassword"] == '':
             gui.Popup("Fill The Login Credentials")
             
@@ -549,9 +552,9 @@ def gui_propmt2():
             window["l_amenu"].update(visible = False)
             info_table_alistitems.clear()
             window["tableitems1"].update(values = info_table_alistitems)
-        #admin end
+        # --Admin End--
 
-         # Item Info starts
+        # --Item Info Starts--
         if event == "Item Information":
             window["l_iteminfo"].update(visible = True)
             window["l_amenu"].update(visible = False)
@@ -575,9 +578,9 @@ def gui_propmt2():
             window["l_iteminfo"].update(visible = False)
             info_table_aiteminfo.clear()
             window["tableaiteminfo"].update(values = info_table_aiteminfo)
-        # Item Info ends
+        # --Item Info Ends--
         
-        #Restock
+        # --Restock Start--
         if event == "Restock Items":
             window["l_restock"].update(visible = True)
             window["l_amenu"].update(visible = False)
@@ -672,9 +675,9 @@ def gui_propmt2():
             for i  in item4:
                 info_table_alistitems.append([i[0], i[1], i[2], i[3], i[4]])
             window["tableitems1"].update(values = info_table_alistitems)
-        # restock end
+        # --Restock End--
 
-        #delivery
+        # --Delivery Start--
         if event == "Delivery":
             window["l_delivery"].update(visible = True)
             window["l_amenu"].update(visible = False)
@@ -706,9 +709,9 @@ def gui_propmt2():
             window["l_delivery"].update(visible = False)
             info_table_delbill.clear()
             window["tabledel"].update(values = info_table_delbill)
-        # Delivery end
+        # --Delivery End--
 
-        # Bill history
+        # --Bill History Start--
         if event == "Bills":
              window["l_billhist"].update(visible = True)
              window["l_amenu"].update(visible = False)
@@ -716,13 +719,13 @@ def gui_propmt2():
              cur.execute("SELECT * FROM BILLS")
              item7 = cur.fetchall()
              for i  in item7:
-                info_table_billhist.append([i[0], i[1], i[2], i[3], i[4]], i[5])
+                info_table_billhist.append([i[0], i[1], i[2], i[3], i[4], i[5]])
              window["tablebillhist"].update(values = info_table_billhist)
 
         if event == "back_bill":
             window["l_amenu"].update(visible = True)
             window["l_billhist"].update(visible = False)
-        #bill history end
+        # --Bill History End--
 
     window.close()
 gui_propmt2()
