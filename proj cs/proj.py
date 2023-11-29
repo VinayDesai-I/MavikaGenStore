@@ -382,7 +382,7 @@ def gui_propmt2():
             window["l_scheckout"].update(visible = True)
             window["l_umenu"].update(visible = False)
 
-            list_items_table(info_table_listitems2, tableitems2):
+            list_items_table(info_table_listitems2, tableitems2)
 
         if event == "back_selfcheckout":
             window["l_umenu"].update(visible = True)
@@ -434,7 +434,7 @@ def gui_propmt2():
             upd_stock(lid)
             
             info_table_listitems2.clear()
-            
+            list_items_table(info_table_listitems2, tableitems2)
   
             gui.Popup("Bill Saved Successfully")
 
@@ -454,11 +454,7 @@ def gui_propmt2():
             upd_stock(lid)
 
             info_table_listitems2.clear()
-            cur.execute("SELECT * FROM ITEMS")
-            itemn11 = cur.fetchall()
-            for i in itemn11:
-                info_table_listitems2.append([i[0], i[1], i[2], i[3], i[4]])
-            window["tableitems2"].update(values = info_table_listitems2)
+            list_items_table(info_table_listitems2, tableitems2)
             
             gui.Popup("Bill Saved and Delivery Placed Successfully")
 
@@ -477,11 +473,7 @@ def gui_propmt2():
             upd_stock(lid)
 
             info_table_listitems2.clear()
-            cur.execute("SELECT * FROM ITEMS")
-            itemn11 = cur.fetchall()
-            for i in itemn11:
-                info_table_listitems2.append([i[0], i[1], i[2], i[3], i[4]])
-            window["tableitems2"].update(values = info_table_listitems2)
+            list_items_table(info_table_listitems2, tableitems2)
             
             gui.Popup("Bill Saved and New Delivery Placed Successfully")
         # --Self Checkout End--
@@ -506,17 +498,13 @@ def gui_propmt2():
             itemn4 = cur.fetchall()
             for i in itemn4:
                 data2 = data2 + str(i)
-            print(data2)
+           
             if values["admname"] in data2 and values["admpassword"] in data2:
-
-                 cur.execute("SELECT * FROM ITEMS")
-                 item1 = cur.fetchall()
-                 for i  in item1:
-                    info_table_alistitems.append([i[0], i[1], i[2], i[3], i[4]])
-                 window["tableitems1"].update(values = info_table_alistitems)
-
-                 window["l_amenu"].update(visible = True)
-                 window["l_alogin"].update(visible = False)
+                
+                list_items_table(info_table_alistitems, tableitems1)
+    
+                window["l_amenu"].update(visible = True)
+                window["l_alogin"].update(visible = False)
 
             else:
                 gui.Popup("INVALID CREDENTIALS")
@@ -576,11 +564,9 @@ def gui_propmt2():
             window["l_restock"].update(visible = True)
             window["l_amenu"].update(visible = False)
             info_table_alistitems.clear()
+            window["tableitems1"].update(values = info_table_alistitems)
             
         if event == "add_stock" and (values["ADDITEMID"], values["ADDITEMNAME"], values["ADDSTOCK"], values["ADDPRICE"], values["ADDDATE"]) != ('','','','',''):
-
-            info_table_alistitems.clear()
-            window["tableitems1"].update(values = info_table_alistitems)
             
             addid =  int(values["ADDITEMID"])
             addname = values["ADDITEMNAME"]
@@ -602,16 +588,9 @@ def gui_propmt2():
             info_table_stockadd.clear()
             window["tablestockadd"].update(values = info_table_stockadd)
 
-            cur.execute("SELECT * FROM ITEMS")
-            item2 = cur.fetchall()
-            for i  in item2:
-                info_table_alistitems.append([i[0], i[1], i[2], i[3], i[4]])
-            window["tableitems1"].update(values = info_table_alistitems)
-
+            list_items_table(info_table_alistitems, tableitems1)
+            
         if event == "upd_stock" and (values["UPDITEMID"], values["UPDQTY"], values["UPDPRICE"]) != ('','',''):
-
-            info_table_alistitems.clear()
-            window["tableitems1"].update(values = info_table_alistitems)
 
             updid = int(values["UPDITEMID"])
             updqty = int(values["UPDQTY"])
@@ -634,16 +613,9 @@ def gui_propmt2():
             info_table_stockupd.clear()
             window["tablestockupd"].update(values = info_table_stockupd)
 
-            cur.execute("SELECT * FROM ITEMS")
-            item3 = cur.fetchall()
-            for i  in item3:
-                info_table_alistitems.append([i[0], i[1], i[2], i[3], i[4]])
-            window["tableitems1"].update(values = info_table_alistitems)
+            list_items_table(info_table_alistitems, tableitems1)
 
         if event == "del_stock" and values["DELITEMID"] != '':
-
-            info_table_alistitems.clear()
-            window["tableitems1"].update(values = info_table_alistitems)
 
             d = int(values["DELITEMID"])
             cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(d))
@@ -664,11 +636,7 @@ def gui_propmt2():
             info_table_stockdel.clear()
             window["tablestockdel"].update(values = info_table_stockdel)
 
-            cur.execute("SELECT * FROM ITEMS")
-            item4 = cur.fetchall()
-            for i  in item4:
-                info_table_alistitems.append([i[0], i[1], i[2], i[3], i[4]])
-            window["tableitems1"].update(values = info_table_alistitems)
+            list_items_table(info_table_alistitems, tableitems1)
         # --Restock End--
 
         # --Delivery Start--
@@ -676,24 +644,18 @@ def gui_propmt2():
             window["l_delivery"].update(visible = True)
             window["l_amenu"].update(visible = False)
 
-            cur.execute("SELECT * FROM DELIVERY")
-            item6 = cur.fetchall()
-            for i  in item6:
-                info_table_delbill.append([i[0], i[1], i[2]])
-            window["tabledel"].update(values = info_table_delbill)
+            list_items_table(info_table_delbill, tabledel)
 
         if event == "done_delivery" and values["custname"] != '':
+            
             namedel = values["custname"]
             cur.execute("DELETE FROM DELIVERY WHERE user_name = '{}'".format(namedel))
             cnc.commit()
 
             info_table_delbill.clear()
             window["tabledel"].update(values = info_table_delbill)
-            cur.execute("SELECT * FROM DELIVERY")
-            item6 = cur.fetchall()
-            for i  in item6:
-                info_table_delbill.append([i[0], i[1], i[2]])
-            window["tabledel"].update(values = info_table_delbill)
+
+            list_items_table(info_table_delbill, tabledel)
 
         if event == "done_delivery" and values["custname"] == '':
             gui.Popup("Please Enter Customer's Name")
@@ -710,11 +672,7 @@ def gui_propmt2():
              window["l_billhist"].update(visible = True)
              window["l_amenu"].update(visible = False)
              
-             cur.execute("SELECT * FROM BILLS")
-             item7 = cur.fetchall()
-             for i  in item7:
-                info_table_billhist.append([i[0], i[1], i[2], i[3], i[4], i[5]])
-             window["tablebillhist"].update(values = info_table_billhist)
+            list_items_table(info_table_billhist, tablebillhist)
 
         if event == "back_bill":
             window["l_amenu"].update(visible = True)
