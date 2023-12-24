@@ -32,19 +32,6 @@ def gui_propmt2():
     price1 = 0
     Q = 0
     titems = " "
-
-    def upd_stock(x):
-        for i in rangelen((x)):
-                query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
-                cur.execute(query2)
-                cnc.commit()
-
-    def list_items_table(x,k):
-        cur.execute("SELECT * FROM ITEMS")
-        itemn11 = cur.fetchall()
-        for i in itemn11:
-            x.append([i[0], i[1], i[2], i[3], i[4]])
-        window["k"].update(values = x)
     
     # THEME
     gui.theme("DarkAmber")
@@ -93,8 +80,6 @@ def gui_propmt2():
 
     #USER BILLS
     layout_mybill = [ [gui.Text("Welcome to My Bills", expand_x = "True", justification = "centre")],
-                      [gui.Text("Enter Bill Date", size = (10,1)), gui.Input(key = "uDATE", do_not_clear = False)],
-                      [gui.Button("Search", key = "search_umybill")],
                       [gui.Table(values =  info_table_umybill, headings = head3, key = "tableumybill",
                                     justification = "centre", expand_x = "True", auto_size_columns = True)],
                       [gui.Button("Back", key = "back_umybill")]
@@ -233,7 +218,21 @@ def gui_propmt2():
 
    # WINDOW
     window = gui.Window("PyFresh Walk-In Store", layout, finalize = True, element_justification = "centre")
-    
+
+   # functions
+    def upd_stock(x):
+        for i in rangelen((x)):
+                query2 = 'UPDATE ITEMS set STOCK_QTY = {} - {} where ITEM_ID = {}'.format(luq[i], lqty[i], lid[i])
+                cur.execute(query2)
+                cnc.commit()
+            
+    def list_items_table(x,k):
+        cur.execute("SELECT * FROM ITEMS")
+        itemn11 = cur.fetchall()
+        for i in itemn11:
+            x.append([i[0], i[1], i[2], i[3], i[4]])
+        window["k"].update(values = x)
+
    # WHILE-EVENT-LOOP
     while True:
     
