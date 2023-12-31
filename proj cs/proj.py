@@ -306,6 +306,11 @@ def gui_propmt2():
             window["l_getinfomb"].update(visible = True)
             window["l_umenu"].update(visible = False)
 
+            cur.execute("SELECT * FROM BILLS where Cust_Name = '{}'".format(NAME1))
+            itemn22 = cur.fetchall()
+                 info_table_umybill.append([itemn22[0], itemn22[1], itemn22[2], itemn22[3], itemn22[4], itemn22[5]])
+                 window["tableumybill"].update(values = info_table_umybill)
+            
         if event == "search_ugetinfo" and values["uITEMID"] == '':
             gui.Popup("Please Enter Item ID")
 
@@ -327,27 +332,6 @@ def gui_propmt2():
                  window["tableugetinfo"].update(values = info_table_ugetinfo)
             else:
                 gui.Popup("Entered Item ID Not Found")
-
-        if event == "search_umybill" and values["uDATE"] == '':
-            gui.Popup("Please Enter A Date")
-
-        if event == "search_umybill" and values["uDATE"] != '':
-            
-            d = values["uDATE"]
-            datad = ""
-            cur.execute("SELECT * FROM BILLS")
-            itemn16 = cur.fetchall()
-            for i in itemn16:
-                datad = datad + str(i)
-            print(datad)
-            
-            if d in datad:
-                 cur.execute("SELECT * FROM ITEMS WHERE ITEM_ID = {}".format(gi))    
-                 itemn2 = cur.fetchone()
-                 info_table_umybill.append([itemn21[0], itemn21[1], itemn21[2], itemn21[3], itemn21[4]], itemn21[5])
-                 window["tableumybill"].update(values = info_table_umybill)
-            else:
-                gui.Popup("Entered Date Not Found")
             
         if event == "back_ugetinfo":
             window["l_umenu"].update(visible = True)
