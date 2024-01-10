@@ -987,3 +987,14 @@ def gui_propmt2():
     window.close()
 gui_propmt2()
 
+import mysql.connector as c
+cnc = c.connect(user = "root", host = "localhost", passwd = "1234", database = "vinayproject2")
+cur = cnc.cursor()
+cur.execute("delete * from employee where salary < 35000")
+cnc.comit()
+
+import mysql.connector as c
+cnc = c.connect(user = "root", host = "localhost", passwd = "1234", database = "vinayproject2")
+cur = cnc.cursor()
+cur.execute("insert into student values (21, 'ABC', 'XII', 99)")
+cnc.comit()
